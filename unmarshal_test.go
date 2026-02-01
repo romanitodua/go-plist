@@ -68,22 +68,12 @@ func TestInvalidMapKeyTypeUnmarshal(t *testing.T) {
 		},
 	}
 
-	var caught bool
-	{
-		defer func() {
-			if e := recover(); e != nil {
-				t.Log("error:", e)
-				caught = true
-			}
-		}()
-
-		d := &Decoder{}
-		d.unmarshalDictionary(dict, reflect.ValueOf(m))
+	d := &Decoder{}
+	err := d.unmarshalDictionary(dict, reflect.ValueOf(m))
+	if err == nil {
+		t.Fatal("expected error for non-string key type, got nil")
 	}
-
-	if !caught {
-		t.Fail()
-	}
+	t.Log("error:", err)
 }
 
 func TestValidButAliasedMapKeyTypeUnmarshal(t *testing.T) {
